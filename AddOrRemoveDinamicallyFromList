@@ -1,0 +1,42 @@
+ //Dado una lista de items, al tocar en el vboton mas se agrega el item seleccionado y se elimina de la lista. Si el usuario toca el boton X de un determinado elemento, ese item
+ //se elimina de los elementos seleccionados y vuelva a la lista
+ 
+ <div class="form-group ">
+    <label asp-for="Apartments" class="control-label"></label>
+    <div class="d-flex align-items-start">
+        @Html.DropDownListFor(model => model.Apartments, Model.Apartments.Select(asw => new SelectListItem { Text = asw.Apartment, Value = asw.ApartmentId.ToString() }), new Dictionary<string, object> { { "class", "form-control mr-2" } })
+        <button class="btn btn-primary addItem">+</button>
+    </div>
+    <p class="apartments">
+
+    </p>
+</div>
+
+
+<script>
+$('.addItem').on('click', function (event) {
+        event.preventDefault();
+
+        var itemSelected = $('#@Html.IdFor(model => model.Apartments)').find("option:selected");
+        if (!itemSelected.val()) return;
+
+        $(`[value=${itemSelected.val()}]`).remove()
+
+        console.log(itemSelected.val())
+        $('.apartments').append(`<h3 class=' mt-1 mr-5 selectedApartment' id= ${itemSelected.val()}>${itemSelected.text()} <button class='btn btn-danger deleteItem'>X</button></h3>`)
+    });
+
+
+    $('.apartments').on('click', '.deleteItem', function (event) {
+        event.preventDefault();
+        var id = $(event.target).parent().prop('id')
+        var txt = $(event.target).parent().text().replace("X","")
+
+        $('#@Html.IdFor(model => model.Apartments)').prepend($('<option>', {
+            value: id,
+            text: txt
+        }));
+
+        $(event.target).parent().remove();
+    });
+ </script>
